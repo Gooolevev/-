@@ -1,4 +1,8 @@
 ```python
+def hello_world():
+    print("Привет, мир! 🌍")
+hello_world()
+
 import telebot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 import requests
