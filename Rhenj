@@ -1,0 +1,32 @@
+import telebot
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+import requests
+
+bot = telebot.TeleBot('7990652825:AAHe9nvSi9nAnDweaLGXcxAILFh7OfrmxH0')  # Замени на свой токен
+
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    button1 = KeyboardButton("Котик")
+    button2 = KeyboardButton("Привет")
+    markup.add(button1, button2)
+    bot.reply_to(message, "Привет! Нажми кнопку:", reply_markup=markup)
+
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    if message.text == "Котик":
+        response = requests.get("https://api.thecatapi.com/v1/images/search")
+        if response.status_code == 200:
+            cat_url = response.json()[0]['url']
+            bot.send_photo(message.chat.id, cat_url)
+        else:
+            bot.reply_to(message, "Не могу найти котика :(")
+    elif message.text == "Привет":
+        bot.reply_to(message, "Привет, как дела?")
+    else:
+        bot.reply_to(message, f"Ты сказал: {message.text}")
+
+bot.polling()
+
+
+___
